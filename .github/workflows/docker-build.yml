@@ -1,0 +1,29 @@
+name: Continous Integration & Deployment
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-dev'
+      - 'v*.*.*-dev.*'
+      - 'v*.*.*-alpha'
+      - 'v*.*.*-alpha.*'
+      - 'v*.*.*-beta'
+      - 'v*.*.*-beta.*'
+    
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-app-image:
+    uses: ShopPal-AI/shoppal-actions/.github/workflows/build-and-push-image.yml@main
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+    secrets: inherit
